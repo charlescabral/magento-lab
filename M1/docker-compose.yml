@@ -1,0 +1,29 @@
+front:
+  build: .
+  dockerfile: Dockerfile
+  ports:
+    - "80:80"
+    - "443:443"
+    - "9000:9000"
+  links:
+    - mage1_db
+    - mage1_redis
+  volumes:
+    - ~/Projects/magento-lab/blank:/var/www
+    - ./logs:/var/log/supervisor
+
+mage1_db:
+  image: mysql:5.6
+  ports:
+    - "3306:3306"
+  entrypoint: /mysql/config/init.sh
+  environment:
+    MYSQL_ROOT_PASSWORD: pass
+  volumes:
+    - ./mysql/data:/var/lib/mysql
+    - ./mysql/config/init.sh:/mysql/config/init.sh
+
+mage1_redis:
+  image: redis
+  ports:
+    - "6379:6379"

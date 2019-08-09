@@ -1,0 +1,4 @@
+.idea/
+nginx/servers/*.conf
+dumps/*.sql
+# **node_modules

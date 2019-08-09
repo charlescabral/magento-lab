@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: mage2_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+    volumes: &appvolumes
+#     - {path_to_new_project:folder_into_container:delegated}
+      - ~/Projects/magento-lab/2.3.2/clean:/magento2/:delegated
+      - ~/Projects/magento-lab/2.3.2/sampledata:/magento_sampledata/:delegated
+      - ./nginx/servers/:/etc/nginx/conf.d/
+      - ./nginx/mage2.conf:/etc/nginx/mage2
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./dumps/install-magento-2.sh:/install-magento-2.sh
+    networks:
+      - network-back
+
+  php:
+    build: php
+    container_name: mage2_php
+    volumes: *appvolumes
+    networks:
+      - network-back
+
+  db:
+    image: mariadb
+    container_name: mage2_mariadb
+    volumes:
+      - ./dumps/:/dumps/
+      - ./mysql/data:/var/lib/mysql/
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - network-back
+
+  # elastic:
+  #   build: elastic
+  #   container_name: mage2_elastic
+  #   volumes:
+  #     - ./elastic/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+  #     - ./elastic/data:/usr/share/elasticsearch/data
+  #   ports:
+  #     - "9201:9201"
+  #     - "9301:9301"
+  #   networks:
+  #     - network-back
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mage2_mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - network-back
+
+  redis:
+    image: redis
+    container_name: mage2_redis
+    ports:
+      - "7936:7936"
+    networks:
+      - network-back
+
+networks:
+  network-back:
+    driver: bridge
