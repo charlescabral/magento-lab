@@ -6,8 +6,8 @@ nginx:
   links:
     - phpfpm
   volumes:
+    - ./nginx/servers/:/etc/nginx/conf.d/
     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    - ./nginx/servers/clean.conf:/etc/nginx/conf.d/default.conf
     - ./logs/nginx:/var/log/nginx
   volumes_from:
     - project
@@ -31,8 +31,7 @@ project:
   image: alpine:latest
   container_name: mage1_project
   volumes:
-    - ../../1.9.3.4/:/var/www/htdocs
-    - ./local.xml:/var/www/htdocs/app/etc/local.xml
+    - ~/Projects/magento-lab/1.9.4.2/clean/:/var/www/htdocs
   command: "true"
 
 mysql:
