@@ -40,17 +40,29 @@ services:
     networks:
       - network-back
 
-  # elastic:
-  #   build: elastic
-  #   container_name: mage2_elastic
-  #   volumes:
-  #     - ./elastic/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
-  #     - ./elastic/data:/usr/share/elasticsearch/data
-  #   ports:
-  #     - "9201:9201"
-  #     - "9301:9301"
-  #   networks:
-  #     - network-back
+  elastic:
+    build: elastic
+    container_name: mage2_elastic
+    volumes:
+      - ./elastic/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./elastic/data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+    networks:
+      - network-back
+
+  kibana:
+    build: kibana
+    container_name: mage2_kibana
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    ports:
+      - '5601:5601'
+    networks:
+      - network-back
 
   mailhog:
     image: mailhog/mailhog:latest
@@ -62,10 +74,10 @@ services:
       - network-back
 
   redis:
-    image: redis
+    image: 'redis:4-alpine'
     container_name: mage2_redis
     ports:
-      - "7936:7936"
+      - "6379:6379"
     networks:
       - network-back
 

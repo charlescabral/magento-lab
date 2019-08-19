@@ -1,0 +1,6 @@
+---
+
+server.host: "0.0.0.0"
+server.name: mage2_kibana
+elasticsearch.url: http://mage2_elastic:9200
+xpack.security.enabled: false
