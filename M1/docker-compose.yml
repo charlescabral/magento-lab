@@ -25,7 +25,7 @@ phpfpm:
   volumes_from:
     - project
   extra_hosts:
-    - project.docker.local:192.168.0.100
+    - magento1.local:192.168.0.100
 
 project:
   image: alpine:latest
