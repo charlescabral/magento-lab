@@ -40,6 +40,36 @@ services:
     networks:
       - network-back
 
+  app:
+    # image: divante/vue-storefront-api:latest
+    container_name: mage2_node
+    build:
+      context: .
+      dockerfile: ./node/Dockerfile
+    depends_on:
+      - elastic
+      - redis
+    env_file: ./node/default.env
+    environment:
+      VS_ENV: dev
+    volumes:
+      - '~/Projects/pwa/storefront/api/config:/var/www/config'
+      - '~/Projects/pwa/storefront/api/ecosystem.json:/var/www/ecosystem.json'
+      - '~/Projects/pwa/storefront/api/migrations:/var/www/migrations'
+      - '~/Projects/pwa/storefront/api/package.json:/var/www/package.json'
+      - '~/Projects/pwa/storefront/api/babel.config.js:/var/www/babel.config.js'
+      - '~/Projects/pwa/storefront/api/scripts:/var/www/scripts'
+      - '~/Projects/pwa/storefront/api/src:/var/www/src'
+      - '~/Projects/pwa/storefront/api/var:/var/www/var'
+    tmpfs:
+      - /var/www/dist
+    links:
+      - nginx:magento.sampledata.local
+    ports:
+      - '8080:8080'
+    networks:
+      - network-back
+
   elastic:
     build: elastic
     container_name: mage2_elastic
