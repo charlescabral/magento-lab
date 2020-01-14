@@ -44,7 +44,7 @@ services:
     # image: divante/vue-storefront-api:latest
     container_name: mage2_node
     build:
-      context: .
+      context: ~/Projects/pwa/storefront/api/
       dockerfile: ./node/Dockerfile
     depends_on:
       - elastic
